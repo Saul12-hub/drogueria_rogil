@@ -15,7 +15,7 @@ app.secret_key = os.getenv("SECRET_KEY", "clave_secreta")
 #  CONEXIÓN
 def get_connection():
     return mysql.connector.connect(
-        host="127.0.0.1",  # Escríbelo directo aquí
+        host="127.0.0.1", 
         user="root",
         password="Clave_tu_baseDatos", 
         database="drogueria_rogil"
