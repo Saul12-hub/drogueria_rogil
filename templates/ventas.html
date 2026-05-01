@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="mb-4">Venta de Productos</h2>
+
+<div class="alert alert-info">
+    El sistema vende automáticamente usando FIFO (lotes más antiguos primero).
+</div>
+
+{% if error %}
+<div class="alert alert-danger">
+    {{ error }}
+</div>
+{% endif %}
+
+<form method="POST">
+
+    <div class="row">
+
+        <!-- PRODUCTO -->
+        <div class="col-md-5">
+            <label class="form-label">Producto</label>
+            <select name="producto_id" class="form-control" required>
+                <option value="">Seleccione un producto</option>
+                {% for p in productos %}
+                    <option value="{{ p.id_producto }}"
+                    {% if request.form.producto_id == p.id_producto|string %}selected{% endif %}>
+                        {{ p.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- CANTIDAD -->
+        <div class="col-md-3">
+            <label class="form-label">Cantidad</label>
+            <input type="number"
+                   name="cantidad"
+                   class="form-control"
+                   min="1"
+                   required
+                   value="{{ request.form.cantidad }}">
+        </div>
+
+        <!-- BOTÓN -->
+        <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">
+                Realizar Venta
+            </button>
+        </div>
+
+    </div>
+
+</form>
+
+<hr>
+
+<h4 class="mt-4">Lotes disponibles (FIFO)</h4>
+
+<table class="table table-bordered mt-3">
+    <thead class="table-dark">
+        <tr>
+            <th>Producto</th>
+            <th>Lote</th>
+            <th>Ingreso</th>
+            <th>Vencimiento</th>
+            <th>Stock</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for l in lotes %}
+        <tr class="
+            {% if l.fecha_vencimiento < now %}
+                table-danger
+            {% elif l.fecha_vencimiento <= (now + timedelta(days=7)) %}
+                table-warning
+            {% endif %}
+        ">
+            <td>{{ l.nombre }}</td>
+            <td>{{ l.numero_lote }}</td>
+            <td>{{ l.fecha_ingreso }}</td>
+            <td>{{ l.fecha_vencimiento }}</td>
+            <td>{{ l.cantidad_disponible }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+
+</table>
+
+{% endblock %}

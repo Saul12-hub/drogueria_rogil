@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row mb-3 text-center">
+    <div class="col-md-4">
+        <div class="alert alert-danger">🔴 Vencidos</div>
+    </div>
+    <div class="col-md-4">
+        <div class="alert alert-warning">🟡 Por vencer</div>
+    </div>
+    <div class="col-md-4">
+        <div class="alert alert-success">🟢 En buen estado</div>
+    </div>
+</div>
+
+<h2 class="mb-4">Alertas de Inventario</h2>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <div class="alert alert-info">
+            Se muestran los productos según su estado de vencimiento.
+        </div>
+
+        <table class="table table-hover text-center">
+
+            <thead class="table-dark">
+                <tr>
+                    <th>Producto</th>
+                    <th>Lote</th>
+                    <th>Vencimiento</th>
+                    <th>Días Restantes</th>
+                    <th>Stock</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for l in datos %}
+                <tr class="
+                    {% if l.dias < 0 %}table-danger
+                    {% elif l.dias <= 7 %}table-warning
+                    {% else %}table-success
+                    {% endif %}
+                ">
+                    <td>{{ l.nombre }}</td>
+                    <td>{{ l.numero_lote }}</td>
+                    <td>{{ l.fecha_vencimiento }}</td>
+                    <td>
+                        {% if l.dias < 0 %}
+                            Vencido
+                        {% else %}
+                            {{ l.dias }} días
+                        {% endif %}
+                    </td>
+                    <td>{{ l.cantidad_disponible }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
+
+{% endblock %}

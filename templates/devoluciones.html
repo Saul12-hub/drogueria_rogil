@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="mb-4">📦 Movimientos de Inventario</h2>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <div class="alert alert-info">
+            Registra entradas o salidas de inventario sin afectar ventas o compras.
+        </div>
+
+        <form method="POST">
+
+            <div class="row">
+
+                <!-- TIPO -->
+                <div class="col-md-3">
+                    <label class="form-label">Tipo</label>
+                    <select name="tipo" class="form-control" required>
+                        <option value="">Seleccione</option>
+                        <option value="entrada">➕ Entrada</option>
+                        <option value="salida">➖ Salida</option>
+                    </select>
+                </div>
+
+                <!-- PRODUCTO -->
+                <div class="col-md-4">
+                    <label class="form-label">Producto</label>
+                    <select name="producto_id" class="form-control" required>
+                        <option value="">Seleccione</option>
+                        {% for p in productos %}
+                        <option value="{{ p.id_producto }}">{{ p.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- CANTIDAD -->
+                <div class="col-md-2">
+                    <label class="form-label">Cantidad</label>
+                    <input type="number" name="cantidad" class="form-control" min="1" required>
+                </div>
+
+                <!-- LOTE (solo para salida o control) -->
+                <div class="col-md-3">
+                    <label class="form-label">Lote (opcional)</label>
+                    <input type="text" name="lote" class="form-control">
+                </div>
+
+            </div>
+
+            <div class="mt-3">
+                <label class="form-label">Justificación</label>
+                <textarea name="justificacion" class="form-control" required></textarea>
+            </div>
+
+            <button class="btn btn-primary mt-3 w-100">
+                Registrar Movimiento
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+<hr>
+
+<!-- HISTORIAL -->
+<div class="card shadow-sm mt-4">
+    <div class="card-body">
+
+        <h5>📋 Historial de Movimientos</h5>
+
+        <table class="table table-hover mt-3">
+            <thead class="table-dark">
+                <tr>
+                    <th>Tipo</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Motivo</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for m in movimientos %}
+                <tr class="
+                    {% if m.tipo == 'salida' %}table-danger
+                    {% else %}table-success
+                    {% endif %}
+                ">
+                    <td>{{ m.tipo }}</td>
+                    <td>{{ m.nombre }}</td>
+                    <td>
+                        {% if m.tipo == 'salida' %}-{% else %}+{% endif %}
+                        {{ m.cantidad }}
+                    </td>
+                    <td>{{ m.justificacion }}</td>
+                    <td>{{ m.fecha }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
+
+{% endblock %}
