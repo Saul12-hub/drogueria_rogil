@@ -15,10 +15,11 @@ app.secret_key = os.getenv("SECRET_KEY", "clave_secreta")
 #  CONEXIÓN
 def get_connection():
     return mysql.connector.connect(
-        host="127.0.0.1",  # Escríbelo directo aquí
+        host="switchyard.proxy.rlwy.net",
         user="root",
-        password="Ttundra09", 
-        database="drogueria_rogil"
+        password="urlUFRMSbyIgEKvZEgKfGJTCXavRBroo",
+        port=58888,
+        database="railway"
     )
     
 #  DECORADOR LOGIN
