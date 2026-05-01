@@ -1,45 +1,49 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
-
+from functools import wraps
+from dotenv import load_dotenv
+import os
 import mysql.connector
 
-app = Flask(__name__)
-app.secret_key = 'clave_secreta_segura'
+# Cargar variables de entorno
+load_dotenv()
 
-# 🔌 CONEXIÓN
+app = Flask(__name__)
+app.secret_key = os.getenv("SECRET_KEY", "clave_secreta")
+
+#  CONEXIÓN
 def get_connection():
     return mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="NewPassSql30Adolfo",
-        database="drogueria_rogil"
+        host=os.getenv("DB_HOST"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_NAME")
     )
 
-# 🔒 DECORADOR LOGIN
+#  DECORADOR LOGIN
 def login_requerido(f):
+    @wraps(f)
     def wrapper(*args, **kwargs):
         if 'user' not in session:
             return redirect('/login')
         return f(*args, **kwargs)
-    wrapper.__name__ = f.__name__
     return wrapper
 
 # 🔒 DECORADOR ROL
 def rol_requerido(roles):
     def decorator(f):
+        @wraps(f)
         def wrapper(*args, **kwargs):
             if 'user' not in session:
                 return redirect('/login')
-            if session['rol'] not in roles:
+            if session.get('rol') not in roles:
                 return "Acceso restringido"
             return f(*args, **kwargs)
-        wrapper.__name__ = f.__name__
         return wrapper
     return decorator
 
-
-# 🏠 DASHBOARD
+#  DASHBOARD
 @app.route('/')
 @login_requerido
 def home():
@@ -97,8 +101,7 @@ def home():
         alertas=alertas
     )
 
-
-# 📦 PRODUCTOS
+#  PRODUCTOS
 @app.route('/productos')
 @login_requerido
 def productos():
@@ -111,7 +114,7 @@ def productos():
     conn.close()
     return render_template('productos.html', productos=productos)
 
-
+#  VENTAS (FIFO)
 @app.route('/ventas', methods=['GET', 'POST'])
 @login_requerido
 def ventas():
@@ -143,7 +146,6 @@ def ventas():
             """, (producto_id,))
             
             lotes = cursor.fetchall()
-
             total_disponible = sum(l['cantidad_disponible'] for l in lotes)
 
             if total_disponible < cantidad:
@@ -188,7 +190,7 @@ def ventas():
 
                 conn.commit()
 
-    #  Datos para la vista
+    # Datos para la vista
     cursor.execute("SELECT id_producto, nombre FROM productos")
     productos = cursor.fetchall()
 
@@ -203,24 +205,16 @@ def ventas():
 
     conn.close()
 
-
-    now = datetime.now().date()
-
     return render_template(
         'ventas.html',
         productos=productos,
         lotes=lotes,
         error=error,
-        now=now,
+        now=datetime.now().date(),
         timedelta=timedelta
     )
 
-@app.route('/devoluciones')
-@login_requerido
-def devoluciones():
-    return render_template('devoluciones.html')
-
-# 📦 INVENTARIO
+#  INVENTARIO
 @app.route('/inventario')
 @login_requerido
 def inventario():
@@ -240,8 +234,7 @@ def inventario():
 
     return render_template('inventario.html', datos=datos)
 
-
-# 🚨 ALERTAS
+# ALERTAS
 @app.route('/alertas')
 @login_requerido
 def alertas():
@@ -267,7 +260,12 @@ def alertas():
     return render_template('alertas.html', datos=datos)
 
 
-# 🏢 PROVEEDORES (SOLO ADMIN)
+@app.route('/devoluciones')
+@login_requerido
+def devoluciones():
+    return render_template('devoluciones.html')
+
+# PROVEEDORES
 @app.route('/proveedores', methods=['GET', 'POST'])
 @rol_requerido(['admin'])
 def proveedores():
@@ -290,11 +288,9 @@ def proveedores():
     proveedores = cursor.fetchall()
 
     conn.close()
-
     return render_template('proveedores.html', proveedores=proveedores)
 
-
-# 👤 REGISTRO
+#  REGISTRO
 @app.route('/registro', methods=['GET', 'POST'])
 def registro():
     conn = get_connection()
@@ -317,8 +313,7 @@ def registro():
 
     return render_template('registro.html', roles=roles)
 
-
-# 🔑 LOGIN
+#  LOGIN
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     conn = get_connection()
@@ -343,14 +338,12 @@ def login():
 
     return render_template('login.html')
 
-
-# 🚪 LOGOUT
+#  LOGOUT
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect('/login')
 
-
-# EJECUCIÓN
+#  EJECUCIÓN
 if __name__ == '__main__':
     app.run(debug=True)
