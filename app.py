@@ -14,18 +14,13 @@ app.secret_key = os.getenv("SECRET_KEY", "clave_secreta")
 
 #  CONEXIÓN
 def get_connection():
-    try:
-        return mysql.connector.connect(
-            host=os.getenv("MYSQL_HOST", "127.0.0.1"),
-            user=os.getenv("MYSQL_USER", "root"),
-            password=os.getenv("MYSQL_PASSWORD", ""),
-            database=os.getenv("MYSQL_DATABASE", "drogueria_rogil")
-        )
-    except mysql.connector.Error as err:
-        app.logger.error("MySQL connection error: %s", err)
-        raise RuntimeError(
-            "No se puede conectar a MySQL. Verifica MYSQL_USER, MYSQL_PASSWORD y MYSQL_DATABASE."
-        ) from err
+    return mysql.connector.connect(
+        host="switchyard.proxy.rlwy.net",
+        user="root",
+        password="urlUFRMSbyIgEKvZEgKfGJTCXavRBroo",
+        port=58888,
+        database="railway"
+    )
     
 #  DECORADOR LOGIN
 def login_requerido(f):
