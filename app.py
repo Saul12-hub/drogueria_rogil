@@ -9,18 +9,18 @@ import mysql.connector
 # Cargar variables de entorno
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="views")
 app.secret_key = os.getenv("SECRET_KEY", "clave_secreta")
 
 #  CONEXIÓN
 def get_connection():
     return mysql.connector.connect(
-        host=os.getenv("DB_HOST"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD"),
-        database=os.getenv("DB_NAME")
+        host="127.0.0.1",  # Escríbelo directo aquí
+        user="root",
+        password="Ttundra09", 
+        database="drogueria_rogil"
     )
-
+    
 #  DECORADOR LOGIN
 def login_requerido(f):
     @wraps(f)
@@ -49,7 +49,7 @@ def rol_requerido(roles):
 def home():
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
-
+        
     cursor.execute("SELECT COUNT(*) AS total FROM productos")
     total_productos = cursor.fetchone()['total']
 
