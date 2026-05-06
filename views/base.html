@@ -25,12 +25,12 @@
     <div class="sidebar bg-dark text-white p-3">
         <h4>Farmacia</h4>
         <ul class="nav flex-column">
-         <li><a href="{{ url_for('productos') }}" class="nav-link text-white">Productos</a></li>
-         <li><a href="{{ url_for('ventas') }}" class="nav-link text-white">Ventas</a></li>
-        <li><a href="{{ url_for('inventario') }}" class="nav-link text-white">Inventario</a></li>
-        <li><a href="{{ url_for('devoluciones') }}" class="nav-link text-white">Ajustes</a></li>
-        <li><a href="{{ url_for('proveedores') }}" class="nav-link text-white">Proveedores</a></li>
-        <li><a href="{{ url_for('alertas') }}" class="nav-link text-white">Alertas</a></li>
+         <li><a href="{{ url_for('productos') }}"              class="nav-link text-white">Productos</a></li>
+         <li><a href="{{ url_for('ventas.ventas') }}" class="nav-link text-white">Ventas</a></li>
+         <li><a href="{{ url_for('inventario.inventario') }}"  class="nav-link text-white">Inventario</a></li>
+         <li><a href="{{ url_for('devoluciones') }}"           class="nav-link text-white">Ajustes</a></li>
+         <li><a href="{{ url_for('proveedores') }}"            class="nav-link text-white">Proveedores</a></li>
+         <li><a href="{{ url_for('alertas.alertas') }}"        class="nav-link text-white">Alertas</a></li>
         </ul>
     </div>
 
