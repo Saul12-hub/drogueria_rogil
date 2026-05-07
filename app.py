@@ -2,20 +2,20 @@ from flask import Flask, render_template, request, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 import os
- 
+
+load_dotenv()  # ← primero que todo
+
 from models.db_connection import get_connection
 from models.lote import get_lotes_por_vencer, get_total_lotes_activos
 from models.producto import get_all_productos
 from models.venta import get_ventas_hoy
 from auth import login_requerido, rol_requerido
- 
+
 # Blueprints
 from controllers.alertas_controller import alertas_bp, get_alertas_data
 from controllers.inventario_controller import inventario_bp
 from controllers.ventas_controller import ventas_bp
- 
-load_dotenv()
- 
+
 app = Flask(__name__, template_folder="views")
 app.secret_key = os.getenv("SECRET_KEY", "secretkey")
  
