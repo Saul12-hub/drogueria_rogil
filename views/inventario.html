@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h2 class="mb-4">Inventario</h2>
+<h2 class="mb-4">Inventario FIFO</h2>
 
 <div class="card shadow-sm">
     <div class="card-body">
@@ -12,36 +12,57 @@
             <thead class="table-dark">
                 <tr>
                     <th>Producto</th>
-                    <th>Lotes (FIFO)</th>
-                    <th>Stock Total</th>
+                    <th>Lote</th>
+                    <th>Fecha Ingreso</th>
+                    <th>Fecha Vencimiento</th>
+                    <th>Disponible</th>
                 </tr>
             </thead>
 
             <tbody>
+
                 {% for item in datos %}
                 <tr>
-                    <td class="fw-bold">{{ item.nombre }}</td>
+
+                    <td class="fw-bold">
+                        {{ item.nombre }}
+                    </td>
 
                     <td>
                         <span class="badge bg-info">
-                            {{ item.lotes }}
+                            {{ item.numero_lote }}
                         </span>
                     </td>
 
                     <td>
+                        {{ item.fecha_ingreso }}
+                    </td>
+
+                    <td>
+                        {{ item.fecha_vencimiento }}
+                    </td>
+
+                    <td>
+
                         <span class="
-                            badge 
-                            {% if item.stock_total == 0 %}bg-danger
-                            {% elif item.stock_total < 10 %}bg-warning text-dark
-                            {% else %}bg-success
+                            badge
+
+                            {% if item.cantidad_disponible < 10 %}
+                                bg-warning text-dark
+                            {% else %}
+                                bg-success
                             {% endif %}
                         ">
-                            {{ item.stock_total }}
+
+                            {{ item.cantidad_disponible }}
+
                         </span>
+
                     </td>
 
                 </tr>
                 {% endfor %}
+
             </tbody>
 
         </table>
