@@ -1,17 +1,15 @@
-import mysql.connector
-from dotenv import load_dotenv
-import os
 # db_connection.py
 import mysql.connector.pooling
 
 pool = mysql.connector.pooling.MySQLConnectionPool(
     pool_name="rogil_pool",
     pool_size=5,
-    host=os.getenv("DB_HOST"),
-    user=os.getenv("DB_USER"),
-    password=os.getenv("DB_PASSWORD"),
-    port=int(os.getenv("DB_PORT", 58888)),
-    database=os.getenv("DB_NAME")
+    host="switchyard.proxy.rlwy.net",
+    port=58888,
+    user="root",
+    password="urlUFRMSbyIgEKvZEgKfGJTCXavRBroo",
+    database="railway",
+    use_pure=True
 )
 
 def get_connection():
