@@ -4,37 +4,60 @@
 
 <h2>Registro de Productos</h2>
 
-<form class="row g-3">
-    <div class="col-md-4">
-        <input type="text" class="form-control" placeholder="Nombre del producto">
+<!-- Mostrar mensajes de éxito/error -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<form method="POST" class="row g-3">
+    <div class="col-md-6">
+        <input type="text" name="nombre" class="form-control" placeholder="Nombre del producto" required>
     </div>
 
     <div class="col-md-3">
-        <input type="number" class="form-control" placeholder="Precio">
+        <input type="number" name="precio" class="form-control" placeholder="Precio" step="0.01" required>
     </div>
 
     <div class="col-md-3">
-        <input type="date" class="form-control">
-    </div>
-
-    <div class="col-md-2">
-        <button class="btn btn-success w-100">Guardar</button>
+        <button type="submit" class="btn btn-success w-100">Guardar Producto</button>
     </div>
 </form>
 
 <hr>
+
+<h4>📦 Productos Registrados</h4>
 
 <table class="table table-bordered mt-3">
     <thead class="table-dark">
         <tr>
             <th>Producto</th>
             <th>Precio</th>
-            <th>Fecha Vencimiento</th>
-            <th>Stock</th>
+            <th>Stock Total</th>
         </tr>
     </thead>
     <tbody>
-        <!-- Datos dinámicos -->
+        {% for p in productos %}
+        <tr>
+            <td>{{ p.nombre }}</td>
+            <td>Q{{ "%.2f"|format(p.precio_venta) }}</td>
+            <td class="
+                {% if p.stock_total == 0 %}table-danger
+                {% elif p.stock_total < 10 %}table-warning
+                {% else %}table-success
+                {% endif %}
+            ">
+                {{ p.stock_total }} unidades
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="3" class="text-center">No hay productos registrados</td>
+        </tr>
+        {% endfor %}
     </tbody>
 </table>
 
