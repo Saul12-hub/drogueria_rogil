@@ -14,24 +14,30 @@
         <table class="table table-hover align-middle text-center">
             <thead class="table-dark">
                 <tr>
-                    <th>Producto</th>
-                    <th>📋 Lotes disponibles (FIFO)</th>
-                    <th>📊 Stock Total</th>
+                    <th style="width: 30%">Producto</th>
+                    <th style="width: 50%">📋 Lotes disponibles (FIFO)</th>
+                    <th style="width: 20%">📊 Stock Total</th>
                 </tr>
             </thead>
 
             <tbody>
                 {% for item in datos %}
-                <tr>
-                    <td class="fw-bold">{{ item.nombre }}</td>
-                    <td class="text-start">
+                <tr style="vertical-align: middle;">
+                    <td class="fw-bold" style="vertical-align: middle;">{{ item.nombre }}</td>
+                    <td style="vertical-align: middle; text-align: center;">
                         {% if item.lotes_fifo and item.lotes_fifo != 'Sin stock' %}
-                            <span class="badge bg-info text-dark">📦 {{ item.lotes_fifo|replace(' | ', '<br>')|safe }}</span>
+                            {% set lotes_lista = item.lotes_fifo.split(' | ') %}
+                            {% for lote in lotes_lista %}
+                                <span class="badge bg-info text-dark mb-1" style="display: inline-block; font-size: 0.85rem; white-space: nowrap;">
+                                    📦 {{ lote }}
+                                </span>
+                                {% if not loop.last %}<br>{% endif %}
+                            {% endfor %}
                         {% else %}
                             <span class="badge bg-secondary">❌ Sin stock</span>
                         {% endif %}
                     </td>
-                    <td>
+                    <td style="vertical-align: middle;">
                         <span class="
                             badge 
                             {% if item.stock_total == 0 %}bg-danger
@@ -50,7 +56,7 @@
                 </tr>
                 {% endfor %}
             </tbody>
-        </table>
+        </dbtable>
 
     </div>
 </div>
