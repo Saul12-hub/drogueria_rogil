@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="mb-4">📦 Inventario</h2>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <div class="alert alert-info">
+            ✅ <strong>FIFO (First In, First Out)</strong> - Los lotes más antiguos aparecen primero.
+        </div>
+
+        <table class="table table-hover align-middle text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>Producto</th>
+                    <th>📋 Lotes disponibles (FIFO)</th>
+                    <th>📊 Stock Total</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for item in datos %}
+                <tr>
+                    <td class="fw-bold">{{ item.nombre }}</td>
+                    <td class="text-start">
+                        {% if item.lotes_fifo and item.lotes_fifo != 'Sin stock' %}
+                            <span class="badge bg-info text-dark">📦 {{ item.lotes_fifo|replace(' | ', '<br>')|safe }}</span>
+                        {% else %}
+                            <span class="badge bg-secondary">❌ Sin stock</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="
+                            badge 
+                            {% if item.stock_total == 0 %}bg-danger
+                            {% elif item.stock_total < 10 %}bg-warning text-dark
+                            {% else %}bg-success
+                            {% endif %}
+                            fs-6 p-2
+                        ">
+                            {{ item.stock_total }} unidades
+                        </span>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3" class="text-center">No hay productos registrados</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+{% endblock %}

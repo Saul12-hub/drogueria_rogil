@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="mb-4">Gestión de Proveedores</h2>
+
+<!-- Mostrar mensajes -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<div class="row">
+
+    <!-- FORMULARIO -->
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+
+                <h5>Nuevo Proveedor</h5>
+
+                <form method="POST">
+
+                    <input type="text" name="nombre" class="form-control mb-2" placeholder="Nombre" required>
+
+                    <input type="text" name="telefono" class="form-control mb-2" placeholder="Teléfono">
+
+                    <input type="email" name="correo" class="form-control mb-2" placeholder="Correo">
+
+                    <textarea name="direccion" class="form-control mb-2" placeholder="Dirección"></textarea>
+
+                    <button class="btn btn-primary w-100">
+                        Guardar Proveedor
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- TABLA -->
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body">
+
+                <h5>📋 Lista de Proveedores</h5>
+
+                <table class="table table-hover mt-3 text-center">
+
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Teléfono</th>
+                            <th>Correo</th>
+                            <th>Dirección</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for p in proveedores %}
+                        <tr>
+                            <td class="fw-bold">{{ p.nombre }}</td>
+                            <td>{{ p.telefono }}</td>
+                            <td>{{ p.correo }}</td>
+                            <td>{{ p.direccion }}</td>
+                            <td>
+                                <a href="{{ url_for('eliminar_proveedor', id_proveedor=p.id_proveedor) }}" 
+                                   class="btn btn-danger btn-sm"
+                                   onclick="return confirm('¿Estás seguro de eliminar este proveedor?')">
+                                    🗑️ Eliminar
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
