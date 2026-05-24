@@ -67,7 +67,6 @@ def home():
         FROM lotes l
         JOIN productos p ON p.id_producto = l.id_producto
         WHERE l.cantidad_disponible > 0
-        AND l.fecha_vencimiento BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)
         ORDER BY l.fecha_vencimiento ASC
         LIMIT 10
     """)
@@ -83,13 +82,6 @@ def home():
         ventas_hoy=ventas_hoy,
         alertas=alertas
     )
- 
- 
-# ── PRODUCTOS (COMENTADO - AHORA USA EL BLUEPRINT)
-# @app.route('/productos')
-# @login_requerido
-# def productos():
-#     return render_template('productos.html', productos=get_all_productos())
  
  
 # ── DEVOLUCIONES (AJUSTES DE INVENTARIO)
@@ -286,7 +278,7 @@ def registro():
     return render_template('registro.html')
 
 
-# ── LOGIN (SOLO ADMIN Y EMPLEADO)
+# ── LOGIN
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     conn = get_connection()

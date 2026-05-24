@@ -64,5 +64,5 @@ def alertas():
         total_lotes=total_lotes,
         por_vencer=por_vencer,
         ventas_hoy=ventas_hoy,
-        lotes=todos_lotes  # ← Enviamos todos los lotes
+        lotes=todos_lotes
     )
