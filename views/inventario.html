@@ -22,41 +22,66 @@
 
             <tbody>
                 {% for item in datos %}
-                <tr style="vertical-align: middle;">
-                    <td class="fw-bold" style="vertical-align: middle;">{{ item.nombre }}</td>
-                    <td style="vertical-align: middle; text-align: center;">
+                <tr>
+
+                    <td class="fw-bold">
+                        {{ item.nombre }}
+                    </td>
+
+                    <td>
                         {% if item.lotes_fifo and item.lotes_fifo != 'Sin stock' %}
+
                             {% set lotes_lista = item.lotes_fifo.split(' | ') %}
+
                             {% for lote in lotes_lista %}
-                                <span class="badge bg-info text-dark mb-1" style="display: inline-block; font-size: 0.85rem; white-space: nowrap;">
+                                <span class="badge bg-info text-dark mb-1"
+                                      style="display:inline-block; font-size:0.85rem; white-space:nowrap;">
                                     📦 {{ lote }}
                                 </span>
-                                {% if not loop.last %}<br>{% endif %}
+
+                                {% if not loop.last %}
+                                    <br>
+                                {% endif %}
                             {% endfor %}
+
                         {% else %}
-                            <span class="badge bg-secondary">❌ Sin stock</span>
+                            <span class="badge bg-secondary">
+                                ❌ Sin stock
+                            </span>
                         {% endif %}
                     </td>
-                    <td style="vertical-align: middle;">
+
+                    <td>
                         <span class="
-                            badge 
-                            {% if item.stock_total == 0 %}bg-danger
-                            {% elif item.stock_total < 10 %}bg-warning text-dark
-                            {% else %}bg-success
+                            badge
+                            {% set stock = item.stock_total or 0 %}
+                            {% if stock == 0 %}
+                                bg-danger
+                            {% elif stock < 10 %}
+                                bg-warning text-dark
+                            {% else %}
+                                bg-success
                             {% endif %}
                             fs-6 p-2
                         ">
                             {{ item.stock_total }} unidades
                         </span>
                     </td>
+
                 </tr>
+
                 {% else %}
+
                 <tr>
-                    <td colspan="3" class="text-center">No hay productos registrados</td>
+                    <td colspan="3" class="text-center">
+                        No hay productos registrados
+                    </td>
                 </tr>
+
                 {% endfor %}
             </tbody>
-        </dbtable>
+
+        </table>
 
     </div>
 </div>

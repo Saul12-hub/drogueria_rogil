@@ -1,13 +1,23 @@
-import mysql.connector.pooling
+# db_connection.py
 
-pool = mysql.connector.pooling.MySQLConnectionPool(
+import mysql.connector
+from mysql.connector.pooling import MySQLConnectionPool
+
+dbconfig = {
+    "host": "switchyard.proxy.rlwy.net",
+    "port": 58888,
+    "user": "root",
+    "password": "urlUFRMSbyIgEKvZEgKfGJTCXavRBroo",
+    "database": "railway",
+    "autocommit": True,
+    "ssl_disabled": False,
+    "connection_timeout": 30
+}
+
+pool = MySQLConnectionPool(
     pool_name="rogil_pool",
     pool_size=5,
-    host="localhost",
-    user="root",
-    password="",
-    port=3306,
-    database="drogueria_rogil"
+    **dbconfig
 )
 
 def get_connection():
