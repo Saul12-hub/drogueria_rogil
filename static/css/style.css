@@ -1,0 +1,89 @@
+body {
+    font-family: Arial;
+}
+
+.sidebar {
+    width: 220px;
+    height: 100vh;
+}
+
+.sidebar a:hover {
+    background: #495057;
+}
+
+.table-danger {
+    background-color: #ffcccc !important;
+}
+
+.table-warning {
+    background-color: #fff3cd !important;
+}
+
+.card {
+    border-radius: 12px;
+    transition: 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.02);
+}
+
+h3 {
+    font-weight: bold;
+}
+
+/* Alertas visuales más suaves */
+.table-danger {
+    background-color: #f8d7da !important;
+}
+
+.table-warning {
+    background-color: #fff3cd !important;
+}
+
+.table-success {
+    background-color: #d1e7dd !important;
+}
+
+/* Hover */
+.table-hover tbody tr:hover {
+    transform: scale(1.01);
+    transition: 0.2s;
+}
+
+/* Tarjetas */
+.card {
+    border-radius: 12px;
+}
+
+/* Inputs */
+.form-control {
+    border-radius: 8px;
+}
+
+/* Tabla */
+.table-hover tbody tr:hover {
+    background-color: #f1f2f6;
+    transition: 0.2s;
+}
+
+/* KPI cards */
+.kpi {
+    border-radius: 12px;
+    transition: 0.2s;
+}
+
+.kpi:hover {
+    transform: scale(1.03);
+}
+
+/* Fondo general */
+.content {
+    background-color: #f5f6fa;
+}
+
+/* Tabla */
+.table-hover tbody tr:hover {
+    transform: scale(1.01);
+    transition: 0.2s;
+}
