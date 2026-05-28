@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="mb-4"> Inventario</h2>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <div class="alert alert-info">
+             <strong>FIFO (First In, First Out)</strong> - Los lotes más antiguos aparecen primero.
+        </div>
+
+        <table class="table table-hover align-middle text-center">
+
+            <thead class="table-dark">
+                <tr>
+                    <th style="width: 20%">Producto</th>
+                    <th style="width: 20%"> Lotes (FIFO)</th>
+                    <th style="width: 20%"> Fecha Ingreso</th>
+                    <th style="width: 20%"> Fecha Vencimiento</th>
+                    <th style="width: 20%"> Stock Total</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for item in datos %}
+                <tr>
+
+                    <!-- PRODUCTO -->
+                    <td class="fw-bold align-middle">
+                        {{ item.nombre }}
+                    </td>
+
+                    <!-- LOTES -->
+                    <td>
+
+                        {% if item.lotes_fifo %}
+
+                            {% for lote in item.lotes_fifo %}
+
+                                <span class="badge bg-info text-dark mb-2 p-2">
+                                    {{ lote.numero_lote }}
+                                    ({{ lote.cantidad }} unid)
+                                </span>
+
+                                {% if not loop.last %}
+                                    <br>
+                                {% endif %}
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <span class="badge bg-secondary">
+                                 Sin stock
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <!-- FECHA INGRESO -->
+                    <td>
+
+                        {% if item.lotes_fifo %}
+
+                            {% for lote in item.lotes_fifo %}
+
+                                <span class="badge bg-light text-dark border mb-2 p-2">
+                                    {{ lote.fecha_ingreso }}
+                                </span>
+
+                                {% if not loop.last %}
+                                    <br>
+                                {% endif %}
+
+                            {% endfor %}
+
+                        {% endif %}
+
+                    </td>
+
+                    <!-- FECHA VENCIMIENTO -->
+                    <td>
+
+                        {% if item.lotes_fifo %}
+
+                            {% for lote in item.lotes_fifo %}
+
+                                <span class="badge bg-warning text-dark mb-2 p-2">
+                                    {{ lote.fecha_vencimiento }}
+                                </span>
+
+                                {% if not loop.last %}
+                                    <br>
+                                {% endif %}
+
+                            {% endfor %}
+
+                        {% endif %}
+
+                    </td>
+
+                    <!-- STOCK TOTAL -->
+                    <td class="align-middle">
+
+                        {% set stock = item.stock_total or 0 %}
+
+                        <span class="
+                            badge
+
+                            {% if stock == 0 %}
+                                bg-danger
+                            {% elif stock < 10 %}
+                                bg-warning text-dark
+                            {% else %}
+                                bg-success
+                            {% endif %}
+
+                            fs-6 p-2
+                        ">
+
+                            {{ stock }} unidades
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                {% else %}
+
+                <tr>
+                    <td colspan="5" class="text-center">
+                        No hay productos registrados
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
+
+{% endblock %}

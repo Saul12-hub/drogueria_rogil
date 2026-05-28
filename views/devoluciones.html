@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="mb-4"> Movimientos de Inventario (Ajustes)</h2>
+
+<!-- Mostrar mensajes -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <div class="alert alert-info">
+            ➕ <strong>Entrada:</strong> Agregar stock al inventario (con lote, fecha de ingreso y vencimiento)<br>
+            ➖ <strong>Salida:</strong> Retirar stock (robo, pérdida, daño)
+        </div>
+
+        <form method="POST">
+
+            <div class="row">
+
+                <!-- TIPO -->
+                <div class="col-md-3">
+                    <label class="form-label">Tipo de movimiento</label>
+                    <select name="tipo" id="tipo_movimiento" class="form-control" required onchange="toggleCampos()">
+                        <option value="">Seleccione</option>
+                        <option value="entrada">➕ Entrada (Agregar stock)</option>
+                        <option value="salida">➖ Salida (Retirar stock)</option>
+                    </select>
+                </div>
+
+                <!-- PRODUCTO -->
+                <div class="col-md-3">
+                    <label class="form-label">Producto</label>
+                    <select name="producto_id" class="form-control" required>
+                        <option value="">Seleccione un producto</option>
+                        {% for p in productos %}
+                        <option value="{{ p.id_producto }}">{{ p.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- CANTIDAD -->
+                <div class="col-md-2">
+                    <label class="form-label">Cantidad</label>
+                    <input type="number" name="cantidad" class="form-control" min="1" required>
+                </div>
+
+            </div>
+
+            <!-- Campos SOLO para entrada -->
+            <div id="campos_entrada" style="display: none;">
+                <div class="row mt-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Número de lote</label>
+                        <input type="text" name="lote" class="form-control" placeholder="Ej: LOTE-001">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Fecha de ingreso</label>
+                        <input type="date" name="fecha_ingreso" class="form-control" value="{{ now_date }}">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Fecha de vencimiento</label>
+                        <input type="date" name="fecha_vencimiento" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <label class="form-label">Justificación (obligatoria)</label>
+                <textarea name="justificacion" class="form-control" rows="2" required></textarea>
+            </div>
+
+            <button class="btn btn-primary mt-3 w-100">
+                Registrar Movimiento
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+<hr>
+
+<!-- HISTORIAL -->
+<div class="card shadow-sm mt-4">
+    <div class="card-body">
+
+        <h5>📋 Historial de Movimientos</h5>
+
+        <table class="table table-hover mt-3">
+            <thead class="table-dark">
+                <tr>
+                    <th>Tipo</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Lote</th>
+                    <th>Fecha Ingreso</th>
+                    <th>Fecha Vencimiento</th>
+                    <th>Motivo</th>
+                    <th>Fecha Registro</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for m in movimientos %}
+                <tr class="
+                    {% if m.tipo == 'salida' %}table-danger
+                    {% else %}table-success
+                    {% endif %}
+                ">
+                    <td>
+                        {% if m.tipo == 'entrada' %}
+                            ➕ Entrada
+                        {% else %}
+                            ➖ Salida
+                        {% endif %}
+                    </td>
+                    <td>{{ m.producto_nombre }}</td>
+                    <td>{{ m.cantidad }}</td>
+                    <td>{{ m.lote or '-' }}</td>
+                    <td>{{ m.fecha_ingreso or '-' }}</td>
+                    <td>{{ m.fecha_vencimiento or '-' }}</td>
+                    <td>{{ m.justificacion }}</td>
+                    <td>{{ m.fecha }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" class="text-center">No hay movimientos registrados</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
+
+<script>
+    function toggleCampos() {
+        var tipo = document.getElementById('tipo_movimiento').value;
+        var camposEntrada = document.getElementById('campos_entrada');
+        
+        if (tipo === 'entrada') {
+            camposEntrada.style.display = 'block';
+            document.querySelector('input[name="lote"]').required = true;
+            document.querySelector('input[name="fecha_vencimiento"]').required = true;
+        } else {
+            camposEntrada.style.display = 'none';
+            document.querySelector('input[name="lote"]').required = false;
+            document.querySelector('input[name="fecha_vencimiento"]').required = false;
+        }
+    }
+    
+    // Inicializar
+    toggleCampos();
+</script>
+
+{% endblock %}

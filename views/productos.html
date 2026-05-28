@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- TITULO -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="fw-bold">Productos</h1>
+        <p class="text-muted mb-0">
+            Administración y control de productos
+        </p>
+    </div>
+</div>
+
+<!-- ALERTAS -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} shadow-sm border-0">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<!-- CARD FORMULARIO -->
+<div class="card shadow-sm border-0 mb-4">
+    
+    <div class="card-body p-4">
+
+        <h5 class="mb-4 fw-bold">
+            Registrar Producto
+        </h5>
+
+        <form method="POST" class="row g-3">
+
+            <div class="col-md-6">
+                <label class="form-label">
+                    Nombre del producto
+                </label>
+
+                <input type="text"
+                       name="nombre"
+                       class="form-control"
+                       placeholder="Ejemplo: Paracetamol 500mg"
+                       required>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">
+                    Precio
+                </label>
+
+                <input type="number"
+                       name="precio"
+                       class="form-control"
+                       placeholder="0.00"
+                       step="0.01"
+                       required>
+            </div>
+
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="submit"
+                        class="btn btn-primary w-100">
+                    Guardar Producto
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- TABLA -->
+<div class="card shadow-sm border-0">
+
+    <div class="card-body">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+                <h5 class="fw-bold mb-0">
+                    Productos Registrados
+                </h5>
+            </div>
+
+            <span class="badge bg-primary fs-6">
+                {{ productos|length }} productos
+            </span>
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for p in productos %}
+                    <tr>
+
+                        <td>
+                            <div class="fw-semibold">
+                                {{ p.nombre }}
+                            </div>
+                        </td>
+
+                        <td>
+                            <span class="badge bg-success">
+                                Q{{ "%.2f"|format(p.precio_venta) }}
+                            </span>
+                        </td>
+
+                        <td>
+
+                            {% if p.stock_total == 0 %}
+
+                                <span class="badge bg-danger">
+                                    Sin stock
+                                </span>
+
+                            {% elif p.stock_total < 10 %}
+
+                                <span class="badge bg-warning text-dark">
+                                    {{ p.stock_total }} unidades
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-success">
+                                    {{ p.stock_total }} unidades
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+                    {% else %}
+
+                    <tr>
+                        <td colspan="3" class="text-center py-4 text-muted">
+                            No hay productos registrados
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

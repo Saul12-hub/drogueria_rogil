@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Login - Droguería Rogil</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            height:100vh;
+
+            display:flex;
+            justify-content:center;
+            align-items:center;
+
+            font-family:Arial, Helvetica, sans-serif;
+
+            background:
+            linear-gradient(
+                135deg,
+                #0f172a 0%,
+                #1e293b 50%,
+                #0f766e 100%
+            );
+
+            overflow:hidden;
+        }
+
+        /* EFECTO DE FONDO */
+        body::before{
+            content:"";
+
+            position:absolute;
+
+            width:500px;
+            height:500px;
+
+            background:rgba(255,255,255,0.05);
+
+            border-radius:50%;
+
+            top:-150px;
+            right:-100px;
+
+            filter:blur(20px);
+        }
+
+        body::after{
+            content:"";
+
+            position:absolute;
+
+            width:400px;
+            height:400px;
+
+            background:rgba(255,255,255,0.04);
+
+            border-radius:50%;
+
+            bottom:-120px;
+            left:-100px;
+
+            filter:blur(20px);
+        }
+
+        /* CARD LOGIN */
+        .login-card{
+
+            position:relative;
+            z-index:10;
+
+            width:400px;
+
+            padding:40px;
+
+            border-radius:24px;
+
+            background:rgba(255,255,255,0.08);
+
+            backdrop-filter:blur(12px);
+
+            border:1px solid rgba(255,255,255,0.1);
+
+            box-shadow:
+            0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        /* LOGO */
+        .logo{
+
+            width:90px;
+            height:90px;
+
+            margin:auto;
+            margin-bottom:20px;
+
+            border-radius:50%;
+
+            display:flex;
+            justify-content:center;
+            align-items:center;
+
+            background:linear-gradient(
+                135deg,
+                #14b8a6,
+                #0f766e
+            );
+
+            color:white;
+
+            font-size:40px;
+
+            box-shadow:
+            0 8px 20px rgba(20,184,166,0.4);
+        }
+
+        /* TITULOS */
+        .login-title{
+            color:white;
+            font-size:30px;
+            font-weight:bold;
+            text-align:center;
+            margin-bottom:5px;
+        }
+
+        .login-subtitle{
+            color:#cbd5e1;
+            text-align:center;
+            margin-bottom:35px;
+            font-size:14px;
+        }
+
+        /* INPUTS */
+        .form-control{
+
+            height:50px;
+
+            border-radius:12px;
+
+            border:none;
+
+            background:rgba(255,255,255,0.12);
+
+            color:white;
+
+            padding-left:45px;
+
+            transition:0.3s;
+        }
+
+        .form-control:focus{
+
+            background:rgba(255,255,255,0.18);
+
+            box-shadow:
+            0 0 0 3px rgba(20,184,166,0.3);
+
+            color:white;
+        }
+
+        .form-control::placeholder{
+            color:#cbd5e1;
+        }
+
+        /* INPUT ICONS */
+        .input-group{
+            position:relative;
+        }
+
+        .input-icon{
+            position:absolute;
+
+            top:50%;
+            left:15px;
+
+            transform:translateY(-50%);
+
+            color:#cbd5e1;
+
+            z-index:20;
+        }
+
+        /* BOTON */
+        .btn-login{
+
+            height:50px;
+
+            border:none;
+
+            border-radius:12px;
+
+            background:linear-gradient(
+                135deg,
+                #14b8a6,
+                #0f766e
+            );
+
+            color:white;
+
+            font-weight:bold;
+
+            transition:0.3s;
+        }
+
+        .btn-login:hover{
+
+            transform:translateY(-2px);
+
+            box-shadow:
+            0 8px 20px rgba(20,184,166,0.4);
+        }
+
+        /* LINK */
+        .register-link{
+
+            color:#cbd5e1;
+
+            text-decoration:none;
+
+            transition:0.3s;
+        }
+
+        .register-link:hover{
+            color:white;
+        }
+
+        hr{
+            border-color:rgba(255,255,255,0.15);
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="login-card">
+
+        <!-- LOGO -->
+        <div class="logo">
+            <i class="bi bi-capsule-pill"></i>
+        </div>
+
+        <!-- TITULO -->
+        <h1 class="login-title">
+            Droguería Rogil
+        </h1>
+
+        <p class="login-subtitle">
+            Sistema Inteligente de Inventario
+        </p>
+
+        <!-- FORM -->
+        <form method="POST">
+
+            <!-- USUARIO -->
+            <div class="mb-3 input-group">
+
+                <i class="bi bi-person-fill input-icon"></i>
+
+                <input type="text"
+                       name="username"
+                       class="form-control"
+                       placeholder="Usuario"
+                       required>
+
+            </div>
+
+            <!-- PASSWORD -->
+            <div class="mb-4 input-group">
+
+                <i class="bi bi-lock-fill input-icon"></i>
+
+                <input type="password"
+                       name="password"
+                       class="form-control"
+                       placeholder="Contraseña"
+                       required>
+
+            </div>
+
+            <!-- BOTON -->
+            <button class="btn btn-login w-100">
+                Ingresar al Sistema
+            </button>
+
+        </form>
+
+        <hr class="my-4">
+
+        <!-- REGISTRO -->
+        <div class="text-center">
+
+            <a href="/registro" class="register-link">
+                ¿No tienes usuario? Regístrate aquí
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

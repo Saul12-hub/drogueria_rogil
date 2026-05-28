@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="mb-4">Venta de Productos</h2>
+
+<div class="alert alert-info">
+    El sistema vende automáticamente usando FIFO (lotes más antiguos primero).
+</div>
+
+{% if error %}
+<div class="alert alert-danger">
+    {{ error }}
+</div>
+{% endif %}
+
+<form method="POST">
+
+    <div class="row">
+
+        <div class="col-md-5">
+            <label class="form-label">Producto</label>
+            <input type="text"
+                   id="busqueda_producto"
+                   class="form-control mb-1"
+                   placeholder="Buscar producto..."
+                   autocomplete="off">
+            <select name="producto_id" id="select_producto" class="form-control" required>
+                <option value="">Seleccione un producto</option>
+                {% for p in productos %}
+                    <option value="{{ p.id_producto }}"
+                        data-nombre="{{ p.nombre | lower }}"
+                        {% if request.form.producto_id == p.id_producto|string %}selected{% endif %}>
+                        {{ p.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- CANTIDAD -->
+        <div class="col-md-3">
+            <label class="form-label">Cantidad</label>
+            <input type="number"
+                   name="cantidad"
+                   class="form-control"
+                   min="1"
+                   required
+                   value="{{ request.form.cantidad }}">
+        </div>
+        <!-- BOTÓN -->
+        <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">
+                Realizar Venta
+            </button>
+        </div>
+
+    </div>
+
+</form>
+
+<hr>
+
+<h4 class="mt-4">Lotes disponibles (FIFO)</h4>
+
+<!-- Leyenda -->
+<div class="d-flex gap-3 mb-3">
+    <span><span class="badge bg-danger">■</span> Vencido</span>
+    <span><span class="badge bg-warning text-dark">■</span> Vence en 7 días</span>
+</div>
+
+<table class="table table-bordered mt-2">
+    <thead class="table-dark">
+        <tr>
+            <th>Producto</th>
+            <th>Lote</th>
+            <th>Ingreso</th>
+            <th>Vencimiento</th>
+            <th>Stock</th>
+        </tr>
+    </thead>
+
+    <tbody id="tabla_lotes">
+        {% for l in lotes %}
+        <tr class="
+            {% if l.fecha_vencimiento < now %}
+                table-danger
+            {% elif l.fecha_vencimiento <= (now + timedelta(days=7)) %}
+                table-warning
+            {% endif %}
+        " data-nombre="{{ l.nombre | lower }}">
+            <td>{{ l.nombre }}</td>
+            <td>{{ l.numero_lote }}</td>
+            <td>{{ l.fecha_ingreso }}</td>
+            <td>{{ l.fecha_vencimiento }}</td>
+            <td>{{ l.cantidad_disponible }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+
+</table>
+
+<script>
+    const inputBusqueda = document.getElementById('busqueda_producto');
+    const selectProducto = document.getElementById('select_producto');
+    const tablaLotes = document.getElementById('tabla_lotes');
+
+    // Guardar
+    const opcionesOriginales = Array.from(selectProducto.options);
+    const filasOriginales = Array.from(tablaLotes.querySelectorAll('tr'));
+
+    inputBusqueda.addEventListener('input', function () {
+        const termino = this.value.toLowerCase().trim();
+
+        // --- Filtrar ---
+        selectProducto.innerHTML = '';
+        opcionesOriginales.forEach(opcion => {
+            const nombre = opcion.dataset.nombre || '';
+            if (opcion.value === '' || nombre.includes(termino)) {
+                selectProducto.appendChild(opcion.cloneNode(true));
+            }
+        });
+
+        const opciones = selectProducto.options;
+        if (opciones.length === 2) {
+            opciones[1].selected = true;
+        } else {
+            opciones[0].selected = true;
+        }
+
+        // Filtrar y ordenar
+        tablaLotes.innerHTML = '';
+
+        if (termino === '') {
+            // Sin búsqueda
+            filasOriginales.forEach(fila => {
+                fila.style.display = '';
+                tablaLotes.appendChild(fila);
+            });
+        } else {
+            // Primero las que coinciden
+            const coinciden = filasOriginales.filter(f => f.dataset.nombre.includes(termino));
+            const noCoinciden = filasOriginales.filter(f => !f.dataset.nombre.includes(termino));
+
+            coinciden.forEach(fila => {
+                fila.style.display = '';
+                tablaLotes.appendChild(fila);
+            });
+            noCoinciden.forEach(fila => {
+                fila.style.display = 'none';
+                tablaLotes.appendChild(fila);
+            });
+        }
+    });
+</script>
+
+{% endblock %}

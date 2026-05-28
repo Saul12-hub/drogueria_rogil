@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="mb-4">Droguería Rogil - Alertas</h2>
+
+<!-- KPIs -->
+<div class="row g-3">
+
+    <div class="col-md-3">
+        <div class="card kpi shadow-sm border-0 bg-primary text-white">
+            <div class="card-body">
+                <h6>Total Productos</h6>
+                <h2>{{ total_productos }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card kpi shadow-sm border-0 bg-success text-white">
+            <div class="card-body">
+                <h6>Lotes Activos</h6>
+                <h2>{{ total_lotes }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card kpi shadow-sm border-0 bg-warning text-dark">
+            <div class="card-body">
+                <h6>Por Vencer</h6>
+                <h2>{{ por_vencer }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card kpi shadow-sm border-0 bg-white text-dark">
+            <div class="card-body">
+                <h6>Ventas Hoy</h6>
+                <h2>Q {{ ventas_hoy }}</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<hr>
+
+<!-- RESUMEN VISUAL -->
+<div class="row text-center mb-3">
+    <div class="col-md-4">
+        <div class="alert alert-danger">🔴 Vencidos</div>
+    </div>
+    <div class="col-md-4">
+        <div class="alert alert-warning">🟡 Por vencer (≤ 7 días)</div>
+    </div>
+    <div class="col-md-4">
+        <div class="alert alert-success">🟢 En buen estado</div>
+    </div>
+</div>
+
+<!-- TABLA COMPLETA DE LOTES CON COLORES -->
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <h5> Listado completo de lotes</h5>
+
+        <table class="table table-hover mt-3 text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>Producto</th>
+                    <th>Lote</th>
+                    <th>Vencimiento</th>
+                    <th>Días Restantes</th>
+                    <th>Stock</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for l in lotes %}
+                <tr class="
+                    {% if l.dias < 0 %}table-danger
+                    {% elif l.dias <= 7 %}table-warning
+                    {% else %}table-success
+                    {% endif %}
+                ">
+                    <td>{{ l.nombre }}</td>
+                    <td>{{ l.numero_lote }}</td>
+                    <td>{{ l.fecha_vencimiento }}</td>
+                    <td>
+                        {% if l.dias < 0 %}
+                             Vencido
+                        {% else %}
+                            {{ l.dias }} días
+                        {% endif %}
+                    </td>
+                    <td>{{ l.cantidad_disponible }} uni</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">No hay lotes registrados</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+{% endblock %}
